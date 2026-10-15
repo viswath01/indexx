@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px #0002;
+            animation: fadeIn 1s ease;
+            width: 300px;
+        }
+
+        h1 {
+            color: #5b4bdb;
+            animation: slideDown 0.8s ease;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #5b4bdb;
+            box-shadow: 0 0 10px #9face6;
+            transform: scale(1.03);
+        }
+
+        button {
+            background: #5b4bdb;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #392bb5;
+            transform: scale(1.08);
+            box-shadow: 0 5px 15px #5b4bdb66;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #result {
+            margin-top: 20px;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.8;
+        }
+
+        .show-result {
+            animation: popUp 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popUp {
+            0% {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+            70% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Grade Calculator</h1>
+
+        <input type="number" id="mark1"
+            placeholder="Enter mark 1" min="0" max="100">
+        <input type="number" id="mark2"
+            placeholder="Enter mark 2" min="0" max="100">
+        <input type="number" id="mark3"
+            placeholder="Enter mark 3" min="0" max="100">
+        <input type="number" id="mark4"
+            placeholder="Enter mark 4" min="0" max="100">
+        <input type="number" id="mark5"
+            placeholder="Enter mark 5" min="0" max="100">
+
+        <button onclick="grade()">Result</button>
+
+        <div id="result" aria-live="polite"></div>
+    </div>
+
+    <script>
+        function grade() {
+            const marks = [
+                "mark1", "mark2", "mark3",
+                "mark4", "mark5"
+            ].map(id => {
+                return document.getElementById(id).value;
+            });
+
+            if (marks.some(mark => mark === "")) {
+                alert("Please enter all 5 marks!");
+                return;
+            }
+
+            const values = marks.map(Number);
+
+            if (values.some(mark =>
+                !Number.isFinite(mark) || mark < 0 || mark > 100
+            )) {
+                alert("Enter marks between 0 and 100!");
+                return;
+            }
+
+            const total = values.reduce((sum, mark) => sum + mark, 0);
+            const average = total / values.length;
+
+            let resultGrade;
+
+            if (average >= 90) {
+                resultGrade = "A";
+            } else if (average >= 80) {
+                resultGrade = "B";
+            } else if (average >= 70) {
+                resultGrade = "C";
+            } else if (average >= 60) {
+                resultGrade = "D";
+            } else {
+                resultGrade = "F";
+            }
+
+            const result = document.getElementById("result");
+
+            result.innerHTML =
+                "Grade: " + resultGrade + "<br>" +
+                "Total Marks: " + total + " / 500<br>" +
+                "Average: " + average.toFixed(2) + "%";
+
+            result.classList.remove("show-result");
+
+            // Restart the animation every time
+            void result.offsetWidth;
+            result.classList.add("show-result");
+        }
+    </script>
+</body>
+</html>
